@@ -1,0 +1,44 @@
+# --- Archivos de PyCharm / IntelliJ ---
+.idea/
+*.iml
+
+# --- Archivos de Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Entornos virtuales ---
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# --- Archivos de distribución / builds ---
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Archivos de test/coverage ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.cache/
+
+# --- Archivos de Jupyter ---
+.ipynb_checkpoints
+
+# --- Archivos del sistema operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+
+# --- Archivos temporales ---
+*.swp
+*.swo
