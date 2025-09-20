@@ -12,7 +12,7 @@ def inicializar_RNA(capas):
         neuronas_capa_actual = capas[i]
         neuronas_capa_siguiente = capas[i+1]
 
-        parametros[f'W{i+1}'] = np.random.randn(neuronas_capa_actual, neuronas_capa_siguiente)
+        parametros[f'W{i+1}'] = np.random.randn(neuronas_capa_actual, neuronas_capa_siguiente) / np.sqrt(neuronas_capa_actual)
         parametros[f'b{i+1}'] = np.zeros((1, neuronas_capa_siguiente))
 
     return parametros
@@ -99,6 +99,7 @@ def entrenar_red(X, T, config):
     for epoca in range(epocas):
         parametros, costo_epoca = actualizacion_parametros(X, T, parametros, config)
         historial[epoca] = costo_epoca
+        print(f'Epoca {epoca:4d}, costo {costo_epoca:.4f}')
 
     return parametros, historial
 
