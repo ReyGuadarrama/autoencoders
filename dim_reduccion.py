@@ -6,8 +6,8 @@ import src.autoencoder as ae
 np.random.seed(37)
 
 def generar_esfera():
-    puntos = np.zeros((5000, 3))
-    for i in range(5000):
+    puntos = np.zeros((500, 3))
+    for i in range(500):
         x1, x2 = np.random.uniform(low=-1, high=1, size=2)
         if x1**2 + x2**2 < 1:
             x = 2 * x1 * np.sqrt(1 - x1 ** 2 - x2 ** 2)
