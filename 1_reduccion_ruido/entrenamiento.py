@@ -24,7 +24,7 @@ def agregar_ruido(ondas_limpias):
     ruido = np.random.normal(0, 0.3, ondas_limpias.shape)
     return ondas_limpias + ruido
 
-ondas_limpias = generar_ondas(500)
+ondas_limpias = generar_ondas(10000)
 ondas_ruidosas = agregar_ruido(ondas_limpias)
 
 configuracion_red = {
@@ -74,7 +74,7 @@ plt.title(f'datos prueba {mse_prueba:.4f}')
 plt.show()
 
 
-# np.savez('modelos/ruido-relu.npz',
-#          **parametros_entrenados,
-#          historial = historial,
-#          config =  configuracion_red)
+np.savez('modelos/ruido-relu.npz',
+         params = parametros_entrenados,
+         historial = historial,
+         config =  configuracion_red)
