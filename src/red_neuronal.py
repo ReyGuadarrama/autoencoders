@@ -12,7 +12,7 @@ def inicializar_RNA(capas):
         neuronas_capa_actual = capas[i]
         neuronas_capa_siguiente = capas[i+1]
 
-        parametros[f'W{i+1}'] = np.random.randn(neuronas_capa_actual, neuronas_capa_siguiente)
+        parametros[f'W{i+1}'] = np.random.randn(neuronas_capa_actual, neuronas_capa_siguiente) / np.sqrt(neuronas_capa_actual)
         parametros[f'b{i+1}'] = np.zeros((1, neuronas_capa_siguiente))
 
     return parametros
@@ -94,11 +94,25 @@ def entrenar_red(X, T, config):
     arquitectura = [input] + capas_ocultas
     parametros = inicializar_RNA(arquitectura)
 
-    historial = np.zeros(epocas)
+    historial = np.zeros((2, epocas))
+
+    n = int(X.shape[0] * 0.8)
+    indices = np.random.permutation(X.shape[0])
+    X, T = X[indices], T[indices]
+    X_ent, T_ent = X[:n], T[:n]
+    X_val, T_val = X[n:], T[n:]
+
+    fn_costo, _ = c.mapa_costos[config['costo']]
 
     for epoca in range(epocas):
-        parametros, costo_epoca = actualizacion_parametros(X, T, parametros, config)
-        historial[epoca] = costo_epoca
+        parametros, costo_epoca = actualizacion_parametros(X_ent, T_ent, parametros, config)
+        historial[0, epoca] = costo_epoca
+        pred_val = predecir(X_val, parametros, config['activaciones'])
+        costo_val = fn_costo(T_val, pred_val)
+        historial[1, epoca] = costo_val
+
+        if epoca % 10 == 0:
+            print(f'epoca {epoca:4d}, costo {costo_epoca:.4f}')
 
     return parametros, historial
 

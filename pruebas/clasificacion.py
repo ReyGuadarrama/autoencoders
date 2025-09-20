@@ -20,7 +20,6 @@ X = np.vstack((X1, X2))
 T = np.vstack((y1, y2))
 
 
-#
 configuracion_red = {
     'input': 2,
     'capas_ocultas': [5, 5, 1],
@@ -44,7 +43,9 @@ prob_map = rna.predecir(X_test, parametros_entrenados, configuracion_red['activa
 
 
 plt.figure()
-plt.plot(historial)
+plt.plot(historial[0], label='Entrenamiento')
+plt.plot(historial[1], label='validacion')
+plt.legend()
 
 plt.figure()
 plt.contourf(X1, X2, prob_map.reshape(X1.shape), cmap='cool', levels=50)

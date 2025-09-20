@@ -19,32 +19,38 @@ def generar_esfera():
 
 esfera_puntos = generar_esfera()
 
+esfera_aum = np.hstack((esfera_puntos, esfera_puntos*2))
+print(esfera_aum.shape)
+
 configuracion_red = {
-    'input': 3,
-    'capas_ocultas': [2, 3],
+    'input': 6,
+    'capas_ocultas': [3, 6],
     'activaciones': ['lineal', 'lineal'],
     'costo': 'mse',
     'optimizador': 'gd',
-    'epocas': 100,
+    'epocas': 500,
     'tamano_lote': 5000,
     'lr': 0.1
 }
 
-parametros_entrenados, historial = rna.entrenar_red(esfera_puntos, esfera_puntos, configuracion_red)
+parametros_entrenados, historial = rna.entrenar_red(esfera_aum, esfera_aum, configuracion_red)
 
-rep_latente = ae.codificador(esfera_puntos, parametros_entrenados, configuracion_red['activaciones'])
+rep_latente = ae.codificador(esfera_aum, parametros_entrenados, configuracion_red['activaciones'])
 reconstruccion = ae.decodificador(rep_latente, parametros_entrenados, configuracion_red['activaciones'])
+
 
 fig = plt.figure()
 ax1 = fig.add_subplot(131, projection='3d')
-ax1.scatter(esfera_puntos[:,0], esfera_puntos[:,1], esfera_puntos[:,2])
+ax1.scatter(esfera_aum[:,0], esfera_aum[:,1], esfera_aum[:,2], c=esfera_aum[:,2], cmap='cool')
+ax1.scatter(esfera_aum[:,3], esfera_aum[:,4], esfera_aum[:,5], c=esfera_aum[:,5], cmap='summer')
 ax1.set_aspect('equal')
 
-ax2 = fig.add_subplot(132)
-ax2.scatter(rep_latente[:,0], rep_latente[:,1])
-ax1.set_aspect('equal')
+ax2 = fig.add_subplot(132, projection='3d')
+ax2.scatter(rep_latente[:,0], rep_latente[:,1], rep_latente[:, 2], c=rep_latente[:,2], cmap='cool')
+ax2.set_aspect('equal')
 
 ax3 = fig.add_subplot(133, projection='3d')
-ax3.scatter(reconstruccion[:,0], reconstruccion[:,1], reconstruccion[:,2])
-ax1.set_aspect('equal')
+ax3.scatter(reconstruccion[:,0], reconstruccion[:,1], reconstruccion[:,2], c=esfera_aum[:,2], cmap='cool')
+ax3.scatter(reconstruccion[:,3], reconstruccion[:,4], reconstruccion[:,5], c=esfera_aum[:,5], cmap='summer')
+ax3.set_aspect('equal')
 plt.show()

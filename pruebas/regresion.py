@@ -24,7 +24,9 @@ X_test = np.linspace(-1, 1, 102).reshape(-1, 1)
 pred = rna.predecir(X_test, parametros_entrenados, configuracion_red['activaciones'])
 
 plt.figure()
-plt.plot(historial)
+plt.plot(historial[0], label='Entrenamiento')
+plt.plot(historial[1], label='Validacion')
+plt.legend()
 
 plt.figure()
 plt.scatter(X, T)
