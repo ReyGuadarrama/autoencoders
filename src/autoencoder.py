@@ -1,13 +1,13 @@
 import numpy as np
 import src.activaciones as act
 
-def encoder(X, parametros, activaciones):
+def codificador(X, parametros, activaciones):
     medio = len(activaciones) // 2
     A = X
 
     for i, activacion in enumerate(activaciones[:medio]):
-        W = parametros[f'W{i + 1}']
-        b = parametros[f'b{i + 1}']
+        W = parametros[f'W{i+1}']
+        b = parametros[f'b{i+1}']
         g, _ = act.mapa_activaciones[activacion]
 
         Z = np.dot(A, W) + b
@@ -15,7 +15,7 @@ def encoder(X, parametros, activaciones):
 
     return A
 
-def decoder(Z, parametros, activaciones):
+def decodificador(Z, parametros, activaciones):
     medio = len(activaciones) // 2
     A = Z
 

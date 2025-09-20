@@ -51,19 +51,20 @@ def retropropagacion(P, T, parametros, valor_capas, derivada_costo):
 
     return derivadas
 
-def generar_batches(X, T, batch_size):
+def generar_batches(X, T, tamano_lote):
     n_muestras = X.shape[0]
     indices = np.random.permutation(n_muestras)
 
-    for i in range(0, n_muestras, batch_size):
-        batch_indices = indices[i:i+batch_size]
+    for i in range(0, n_muestras, tamano_lote):
+        batch_indices = indices[i:i+tamano_lote]
         yield X[batch_indices], T[batch_indices]
 
-def actualizar_parametros(X, T, parametros, config):
+
+def actualizacion_parametros(X, T, parametros, config):
     activaciones = config['activaciones']
     costo_tipo = config['costo']
     optimizador_tipo = config['optimizador']
-    batch_size = config.get('batch_size', X.shape[0])
+    tamano_lote = config['tamano_lote']
     lr = config['lr']
 
     # Obtener funciones de costo
@@ -71,17 +72,18 @@ def actualizar_parametros(X, T, parametros, config):
     optimizador_fn = op.mapa_optimizadores[optimizador_tipo]
 
     costo_total = 0
-    n_batches = 0
+    n_lotes = 0
 
-    for X_batch, T_batch in generar_batches(X, T, batch_size):
+    for X_batch, T_batch in generar_batches(X, T, tamano_lote):
         pred, val_capas = propagacion_adelante(X_batch, parametros, activaciones)
         derivadas = retropropagacion(pred, T_batch, parametros, val_capas, costo_derivada)
         parametros = optimizador_fn(parametros, derivadas, lr)
 
         costo_total += costo_fn(T_batch, pred)
-        n_batches += 1
+        n_lotes += 1
 
-    costo_promedio = costo_total / n_batches
+    costo_promedio = costo_total / n_lotes
+
     return parametros, costo_promedio
 
 def entrenar_red(X, T, config):
@@ -95,7 +97,7 @@ def entrenar_red(X, T, config):
     historial = np.zeros(epocas)
 
     for epoca in range(epocas):
-        parametros, costo_epoca = actualizar_parametros(X, T, parametros, config)
+        parametros, costo_epoca = actualizacion_parametros(X, T, parametros, config)
         historial[epoca] = costo_epoca
 
     return parametros, historial
@@ -104,8 +106,8 @@ def predecir(X, parametros, activaciones):
     A = X
 
     for i, activacion in enumerate(activaciones):
-        W = parametros[f'W{i + 1}']
-        b = parametros[f'b{i + 1}']
+        W = parametros[f'W{i+1}']
+        b = parametros[f'b{i+1}']
         g, _ = act.mapa_activaciones[activacion]
 
         Z = np.dot(A, W) + b
