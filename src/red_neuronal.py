@@ -90,16 +90,30 @@ def entrenar_red(X, T, config):
     input = config['input']
     capas_ocultas = config['capas_ocultas']
     epocas = config['epocas']
+    costo_tipo = config['costo']
 
     arquitectura = [input] + capas_ocultas
     parametros = inicializar_RNA(arquitectura)
 
-    historial = np.zeros(epocas)
+    historial = np.zeros((2, epocas))
+
+    # Separa el conjunto en datos entrenamiento y validacion
+    n = int(len(X) * 0.8)
+    idx = np.random.permutation(len(X))
+    X, T = X[idx], T[idx]
+    X_ent, T_ent = X[:n], T[:n]
+    X_val, T_val = X[n:], T[n:]
+
+    fn_costo, _ = c.mapa_costos[costo_tipo]
 
     for epoca in range(epocas):
-        parametros, costo_epoca = actualizacion_parametros(X, T, parametros, config)
-        historial[epoca] = costo_epoca
-        print(f'Epoca {epoca:4d}, costo {costo_epoca:.4f}')
+        parametros, costo_epoca = actualizacion_parametros(X_ent, T_ent, parametros, config)
+        historial[0, epoca] = costo_epoca
+        pred_val = predecir(X_val, parametros, config['activaciones'])
+        costo_val = fn_costo(T_val, pred_val)
+        historial[1, epoca] = costo_val
+
+        print(f'Epoca {epoca:4d}, costo entrenamiento: {costo_epoca:.4f}, costo validacion: {costo_val:.4f}')
 
     return parametros, historial
 
