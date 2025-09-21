@@ -17,7 +17,7 @@ def relu(z):
     return np.maximum(0, z)
 
 def derivada_relu(z):
-    return (z > 0).astype(float)
+    return (z > 0).astype(int)
 
 mapa_activaciones = {
     'lineal': (lineal, derivada_lineal),
