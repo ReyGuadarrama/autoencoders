@@ -35,7 +35,7 @@ configuracion_red = {
     'activaciones': ['relu', 'relu', 'relu', 'lineal'],
     'costo': 'mse',
     'optimizador': 'gd',
-    'epocas': 5000,
+    'epocas': 200,
     'tamano_lote': 50,
     'lr': 0.1
 }
@@ -43,29 +43,15 @@ configuracion_red = {
 parametros_entrenados, historial = rna.entrenar_red(ondas_ruidosas, ondas_limpias, configuracion_red)
 
 plt.figure()
-plt.plot(historial)
+plt.plot(historial[0], label='Entrenamiento')
+plt.plot(historial[1], label='Validacion')
+plt.legend()
 plt.show()
 
 np.savez('modelos/relu.npz',
          params=parametros_entrenados,
          historial=historial,
          config=configuracion_red)
-
-#
-# ondas_limpias_prueba = generar_ondas(500)
-# ondas_ruidosas_prueba = agregar_ruido(ondas_limpias_prueba)
-#
-# reconstruccion = rna.predecir(ondas_ruidosas_prueba, parametros_entrenados, configuracion_red['activaciones'])
-#
-# plt.figure()
-# plt.plot(historial)
-# plt.show()
-#
-# plt.figure()
-# plt.plot(ondas_limpias_prueba[10], label='onda original')
-# plt.plot(reconstruccion[10], label='reconstruccion')
-# plt.legend()
-# plt.show()
 
 
 

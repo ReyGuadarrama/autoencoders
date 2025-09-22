@@ -48,28 +48,25 @@ reconstruccion_relu = rna.predecir(ondas_ruidosas_prueba, parametros_relu, confi
 reconstruccion_sigmoide = rna.predecir(ondas_ruidosas_prueba, parametros_sigmoide, config_sigmoide['activaciones'])
 
 plt.figure()
-plt.plot(historial_relu, label='Costo ReLu')
-plt.plot(historial_sigmoide, label='Costo Sigmoide')
+plt.plot(historial_relu[0], label='Costo ReLu')
+plt.plot(historial_sigmoide[0], label='Costo Sigmoide')
 plt.legend()
 
+fig, axes = plt.subplots(2, 4)
 
-i = 10
+for i in range(4):
+    n = np.random.randint(500)
 
-fig = plt.figure()
-ax1 = fig.add_subplot(211)
-ax1.plot(ondas_limpias_prueba[i], label='onda original')
-ax1.plot(reconstruccion_relu[i], label='reconstruccion')
-ax1.plot(ondas_ruidosas_prueba[i], label='onda ruido', alpha=0.3)
-ax1.set_title('Entrenamiento Relu')
-ax1.legend()
+    # Entrenamiento ReLu
+    axes[0, i].plot(ondas_limpias_prueba[n], label='onda original')
+    axes[0, i].plot(reconstruccion_relu[n], label='reconstruccion')
+    axes[0, i].plot(ondas_ruidosas_prueba[n], label='onda ruido', alpha=0.3)
 
-ax2 = fig.add_subplot(212)
-ax2.plot(ondas_limpias_prueba[i], label='onda original')
-ax2.plot(reconstruccion_sigmoide[i], label='reconstruccion')
-ax2.plot(ondas_ruidosas_prueba[i], label='onda ruido', alpha=0.3)
-ax2.set_title('Entrenamiento Sigmoide')
-ax2.legend()
+    # Entrenamiento Sigmoide
+    axes[1, i].plot(ondas_limpias_prueba[n], label='onda original')
+    axes[1, i].plot(reconstruccion_sigmoide[n], label='reconstruccion')
+    axes[1, i].plot(ondas_ruidosas_prueba[n], label='onda ruido', alpha=0.3)
 
-
+plt.legend()
 plt.show()
 
