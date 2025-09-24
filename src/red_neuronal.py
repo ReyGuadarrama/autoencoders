@@ -77,7 +77,7 @@ def actualizacion_parametros(X, T, parametros, config):
     for X_batch, T_batch in generar_batches(X, T, tamano_lote):
         pred, val_capas = propagacion_adelante(X_batch, parametros, activaciones)
         derivadas = retropropagacion(pred, T_batch, parametros, val_capas, costo_derivada)
-        parametros = optimizador_fn(parametros, derivadas, lr)
+        parametros = optimizador_fn(parametros, derivadas, config)
 
         costo_total += costo_fn(T_batch, pred)
         n_lotes += 1

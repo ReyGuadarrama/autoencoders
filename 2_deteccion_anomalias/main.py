@@ -4,7 +4,7 @@ import src.red_neuronal as rna
 import src.costos as costos
 from src.utils import generar_ondas
 
-#np.random.seed(37)
+np.random.seed(37)
 
 modelo = np.load('modelos/prueba1.npz', allow_pickle=True)
 
@@ -25,8 +25,8 @@ mse_prueba = costos.mse(ondas_anomalas, reconstruccion_anomala)
 fig, axes = plt.subplots(1, 4)
 for i in range(4):
     n = np.random.randint(500)
-    axes[i].plot(ondas_normales[n], label='original normal')
-    axes[i].plot(reconstruccion_normal[n], label='re''construccion')
+    axes[i].plot(ondas_normales[n], 'r-', label='original normal')
+    axes[i].plot(reconstruccion_normal[n], 'b--', label='re''construccion')
 
 plt.title(f'datos normales {mse_entrenamiento:.4f}')
 plt.legend()
@@ -44,7 +44,7 @@ plt.show()
 ondas_prueba = np.vstack((ondas_normales, ondas_anomalas))
 reconstruccion = rna.predecir(ondas_prueba, parametros_entrenados, configuracion_red['activaciones'])
 
-umbral = 0.06
+umbral = 0.08
 errores = np.mean((ondas_prueba - reconstruccion)**2, axis=1)
 y = np.hstack([np.zeros(500), np.ones(500)])
 deteccion = (errores > umbral).astype(float)

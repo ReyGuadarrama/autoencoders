@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 datos = np.load('../datos/MNIST.npz')
 X, y = datos['X'], datos['y']
 X = X / 255.0  # normalizar

@@ -23,9 +23,10 @@ plt.figure()
 plt.scatter(rep_latente[:,0],rep_latente[:,1], marker='.')
 plt.show()
 
-# plt.figure()
-# for i in range(1):
-#     n = np.random.randint(0, 1000)
-#     plt.plot(t, gausianas_prueba[n], label='original')
-#     plt.plot(t, reconstruccion[n], label='reconstruccion')
+plt.figure()
+for i in range(1):
+    n = np.random.randint(0, 1000)
+    plt.plot(t, gausianas_prueba[n], label='original')
+    plt.plot(t, reconstruccion[n], label='reconstruccion')
+plt.show()
 

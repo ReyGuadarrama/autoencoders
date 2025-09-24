@@ -3,11 +3,9 @@ import matplotlib.pyplot as plt
 import src.red_neuronal as rna
 from src.utils import generar_ondas
 
-ondas_entrenamiento = generar_ondas(10000)
+np.random.seed(37)
 
-# datos de prueba
-ondas_normales = generar_ondas(500)
-ondas_anomalas = generar_ondas(500, rango_frec=(7.0, 9.0))
+ondas_entrenamiento = generar_ondas(10000)
 
 configuracion_red = {
     'input': 200,
@@ -15,12 +13,12 @@ configuracion_red = {
     'activaciones': ['relu', 'relu', 'relu', 'lineal'],
     'costo': 'mse',
     'optimizador': 'gd',
-    'epocas': 2000,
+    'epocas': 300,
     'tamano_lote': 32,
     'lr': 0.1
 }
 
-parametros_entrenados, historial = rna.entrenar_red(ondas_normales, ondas_normales, configuracion_red)
+parametros_entrenados, historial = rna.entrenar_red(ondas_entrenamiento, ondas_entrenamiento, configuracion_red)
 
 plt.figure()
 plt.plot(historial[0], label='Entrenamiento')
