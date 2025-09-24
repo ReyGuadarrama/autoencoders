@@ -32,10 +32,10 @@ ondas_ruidosas = agregar_ruido(ondas_limpias)
 configuracion_red = {
     'input': 200,
     'capas_ocultas': [50, 25, 50, 200],
-    'activaciones': ['relu', 'relu', 'relu', 'lineal'],
+    'activaciones': ['sigmoide', 'sigmoide', 'sigmoide', 'lineal'],
     'costo': 'mse',
     'optimizador': 'gd',
-    'epocas': 5000,
+    'epocas': 200,
     'tamano_lote': 50,
     'lr': 0.1
 }
@@ -43,10 +43,11 @@ configuracion_red = {
 parametros_entrenados, historial = rna.entrenar_red(ondas_ruidosas, ondas_limpias, configuracion_red)
 
 plt.figure()
-plt.plot(historial)
+plt.plot(historial[0])
+plt.plot(historial[1])
 plt.show()
 
-np.savez('modelos/relu.npz',
+np.savez('modelos/sigmoide.npz',
          params=parametros_entrenados,
          historial=historial,
          config=configuracion_red)

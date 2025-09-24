@@ -4,7 +4,7 @@ import src.red_neuronal as rna
 
 np.random.seed(37)
 
-X = np.linspace(-1, 1, 100).reshape(-1, 1)
+X = np.linspace(-1, 1, 1000).reshape(-1, 1)
 T = 2 * np.cos(X*2) + X**3 + np.random.normal(0, 0.4, X.shape)
 
 
@@ -20,8 +20,8 @@ configuracion_red = {
 }
 
 parametros_entrenados, historial = rna.entrenar_red(X, T, configuracion_red)
-X_test = np.linspace(-1, 1, 102).reshape(-1, 1)
-pred = rna.predecir(X_test, parametros_entrenados, configuracion_red['activaciones'])
+X_prueba = np.linspace(-1, 1, 102).reshape(-1, 1)
+pred = rna.predecir(X_prueba, parametros_entrenados, configuracion_red['activaciones'])
 
 plt.figure()
 plt.plot(historial[0], label='Entrenamiento')
@@ -30,5 +30,5 @@ plt.legend()
 
 plt.figure()
 plt.scatter(X, T)
-plt.plot(X_test, pred, 'r-')
+plt.plot(X_prueba, pred, 'r-')
 plt.show()

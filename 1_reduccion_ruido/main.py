@@ -48,8 +48,8 @@ reconstruccion_relu = rna.predecir(ondas_ruidosas_prueba, parametros_relu, confi
 reconstruccion_sigmoide = rna.predecir(ondas_ruidosas_prueba, parametros_sigmoide, config_sigmoide['activaciones'])
 
 plt.figure()
-plt.plot(historial_relu, label='Costo ReLu')
-plt.plot(historial_sigmoide, label='Costo Sigmoide')
+plt.plot(historial_relu[1], label='Costo ReLu')
+plt.plot(historial_sigmoide[1], label='Costo Sigmoide')
 plt.legend()
 
 
