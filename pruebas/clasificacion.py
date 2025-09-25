@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import src.red_neuronal as rna
 
 def data_generator(media1, media2):
-    x1 = np.random.normal(media1, 1, 200)
-    x2 = np.random.normal(media2, 1, 200)
+    x1 = np.random.normal(media1, 1, 2000)
+    x2 = np.random.normal(media2, 1, 2000)
 
     X = np.vstack((x1, x2)).transpose()
 
@@ -13,8 +13,8 @@ def data_generator(media1, media2):
 
 X1 = data_generator(1.0, 2.0)
 X2 = data_generator(3.0, -2.0)
-y1 = np.zeros(200).reshape(-1, 1)
-y2 = np.ones(200).reshape(-1, 1)
+y1 = np.zeros(2000).reshape(-1, 1)
+y2 = np.ones(2000).reshape(-1, 1)
 
 X = np.vstack((X1, X2))
 T = np.vstack((y1, y2))

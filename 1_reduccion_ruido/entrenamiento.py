@@ -3,59 +3,70 @@ import matplotlib.pyplot as plt
 import src.red_neuronal as rna
 import src.autoencoder as ae
 
+np.random.seed(37)
+
+def generar_ondas(n_muestras):
+    ondas = np.zeros((n_muestras, 200))
+    t = np.linspace(0, 8 * np.pi, 200)
+
+    for i in range(n_muestras):
+        frecuencia = np.random.uniform(3.0, 3.5)
+        amplitud = np.random.uniform(0.5, 1.5)
+        fase = np.random.uniform(0, 2 * np.pi)
+        frec_envolte = np.random.uniform(0.1, 0.3)
+
+        envolvente = amplitud * np.sin(frec_envolte * t)
+        ondas[i] = envolvente * np.sin(frecuencia * t + fase)
+
+    return ondas
+
+
 def agregar_ruido(ondas_limpias):
-    ruido = np.random.normal(0.0, 0.5, ondas_limpias.shape)
+    ruido = np.random.normal(0.0, 0.3, ondas_limpias.shape)
     return ondas_limpias + ruido
 
-datos = np.load('../datos/MNIST.npz')
-X, y = datos['X'], datos['y']
 
-img_ruidosas = agregar_ruido(X)
-
+ondas_limpias = generar_ondas(10000)
+ondas_ruidosas = agregar_ruido(ondas_limpias)
 
 configuracion_red = {
-    'input': 784,
-    'capas_ocultas': [64, 784],
-    'activaciones': ['relu', 'sigmoide'],
+    'input': 200,
+    'capas_ocultas': [50, 25, 50, 200],
+    'activaciones': ['sigmoide', 'sigmoide', 'sigmoide', 'lineal'],
     'costo': 'mse',
-    'optimizador': 'gdm',
+    'optimizador': 'gd',
     'epocas': 200,
-    'tamano_lote': 250,
-    'lr': 0.4
+    'tamano_lote': 50,
+    'lr': 0.1
 }
 
-parametros_entrenados, historial = rna.entrenar_red(img_ruidosas, X, configuracion_red)
+parametros_entrenados, historial = rna.entrenar_red(ondas_ruidosas, ondas_limpias, configuracion_red)
 
 plt.figure()
-plt.plot(historial[0], label='Entrenamiento')
-plt.plot(historial[1], label='Validacion')
-plt.legend()
-
-reconstruccion = rna.predecir(X, parametros_entrenados, configuracion_red['activaciones'])
-
-fig, axes = plt.subplots(4, 6)
-
-for i, ax_pair in enumerate(axes.reshape(-1, 3)):
-    n = np.random.randint(len(X))
-
-    ax_pair[0].imshow(img_ruidosas[n].reshape(28, 28), cmap="gray")
-    ax_pair[0].set_title("Ruidosa", fontsize=8)
-    ax_pair[0].axis("off")
-
-    ax_pair[1].imshow(reconstruccion[n].reshape(28, 28), cmap="gray")
-    ax_pair[1].set_title("Reconstruida", fontsize=8)
-    ax_pair[1].axis("off")
-
-    ax_pair[2].imshow(X[n].reshape(28, 28), cmap="gray")
-    ax_pair[2].set_title("Original", fontsize=8)
-    ax_pair[2].axis("off")
-
+plt.plot(historial[0])
+plt.plot(historial[1])
 plt.show()
 
-np.savez('modelos/MNIST.npz',
+np.savez('modelos/sigmoide.npz',
          params=parametros_entrenados,
          historial=historial,
          config=configuracion_red)
+
+#
+# ondas_limpias_prueba = generar_ondas(500)
+# ondas_ruidosas_prueba = agregar_ruido(ondas_limpias_prueba)
+#
+# reconstruccion = rna.predecir(ondas_ruidosas_prueba, parametros_entrenados, configuracion_red['activaciones'])
+#
+# plt.figure()
+# plt.plot(historial)
+# plt.show()
+#
+# plt.figure()
+# plt.plot(ondas_limpias_prueba[10], label='onda original')
+# plt.plot(reconstruccion[10], label='reconstruccion')
+# plt.legend()
+# plt.show()
 
 
 

@@ -1,73 +1,53 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import src.red_neuronal as rna
-import src.costos as costos
-from src.utils import generar_ondas
+import src.utils as utils
+import src.costos as c
 
-np.random.seed(37)
 
+#Cargar modelo
 modelo = np.load('modelos/prueba1.npz', allow_pickle=True)
 
 parametros_entrenados = modelo['params'].item()
 historial = modelo['historial']
-configuracion_red = modelo['config'].item()
+configiracion_red = modelo['config'].item()
 
-# datos de prueba
-ondas_normales = generar_ondas(500)
-ondas_anomalas = generar_ondas(500, rango_frec=(7.0, 9.0))
+#Datos de prueba
+ondas_normales = utils.generar_ondas(1000)
+ondas_anomalas = utils.generar_ondas(1000, rango_frec=(8.0, 10.0))
 
-reconstruccion_normal = rna.predecir(ondas_normales, parametros_entrenados, configuracion_red['activaciones'])
-reconstruccion_anomala = rna.predecir(ondas_anomalas, parametros_entrenados, configuracion_red['activaciones'])
+reconstruccion_normal = rna.predecir(ondas_normales, parametros_entrenados, configiracion_red['activaciones'])
+reconstruccion_anomala = rna.predecir(ondas_anomalas, parametros_entrenados, configiracion_red['activaciones'])
 
-mse_entrenamiento = costos.mse(ondas_normales, reconstruccion_normal)
-mse_prueba = costos.mse(ondas_anomalas, reconstruccion_anomala)
-
-fig, axes = plt.subplots(1, 4)
-for i in range(4):
-    n = np.random.randint(500)
-    axes[i].plot(ondas_normales[n], 'r-', label='original normal')
-    axes[i].plot(reconstruccion_normal[n], 'b--', label='re''construccion')
-
-plt.title(f'datos normales {mse_entrenamiento:.4f}')
-plt.legend()
-
-fig, axes = plt.subplots(1, 4)
-for i in range(4):
-    n = np.random.randint(500)
-    axes[i].plot(ondas_anomalas[n], label='original anomala')
-    axes[i].plot(reconstruccion_anomala[n], label='reconstruccion')
-
-plt.title(f'datos anomalos {mse_prueba:.4f}')
-plt.legend()
-plt.show()
+mse_normales = c.mse(ondas_normales, reconstruccion_normal)
+mse_anomalias = c.mse(ondas_anomalas, reconstruccion_anomala)
 
 ondas_prueba = np.vstack((ondas_normales, ondas_anomalas))
-reconstruccion = rna.predecir(ondas_prueba, parametros_entrenados, configuracion_red['activaciones'])
+reconstruccion = rna.predecir(ondas_prueba, parametros_entrenados, configiracion_red['activaciones'])
 
-umbral = 0.08
-errores = np.mean((ondas_prueba - reconstruccion)**2, axis=1)
-y = np.hstack([np.zeros(500), np.ones(500)])
+umbral = 0.05
+errores = np.mean((ondas_prueba - reconstruccion)**2, axis = 1)
+y = np.hstack((np.zeros(1000), np.ones(1000)))
 deteccion = (errores > umbral).astype(float)
 
-falsos_positivos = np.sum((deteccion==1) & (y==0))
-falsos_negativos = np.sum((deteccion==0) & (y==1))
-print(f'falsos positivos: {falsos_positivos}, falsos negativos: {falsos_negativos}')
-acc = np.sum(y==deteccion)/1000
-print(acc)
+falsos_positivos = np.sum((deteccion == 1) & (y == 0))
+falsos_negativos = np.sum((deteccion == 0) & (y == 1))
+
+print(f'Falsos positivos: {falsos_positivos}, Falsos negativos: {falsos_negativos}')
+precision = np.sum(y==deteccion)/ 2000
+print(f'Precision: {precision}')
 
 detecciones_erroneas = np.where((y!=deteccion))[0]
-print(detecciones_erroneas)
 
 fig, axes = plt.subplots(1, 4)
-for i, index in enumerate(detecciones_erroneas[:4]):
+for i , index in enumerate(detecciones_erroneas[:4]):
     if errores[index] > umbral:
-        det = 'falso positivo'
+        det='Falso positivo'
     else:
-        det = 'falso negativo'
+        det='Falso negativo'
 
-    axes[i].plot(ondas_prueba[index])
-    axes[i].plot(reconstruccion[index])
-    axes[i].set_title(f'mse = {errores[index]:.4f}, {det}')
+    axes[i].plot(ondas_prueba[index], color='blue', label ='original')
+    axes[i].plot(reconstruccion[index], color='red', label ='reconstruccion')
+    #axes[i].title(f'mse: {errores[index]}, {det}')
 
 plt.show()
-
