@@ -14,3 +14,20 @@ def generar_ondas(n_muestras, rango_frec=(3.0, 3.5)):
         ondas[i] = envolvente * np.sin(frecuencia * t + fase)
 
     return ondas
+
+def agregar_ruido(muestra_limpia, nivel=0.3):
+    ruido = np.random.normal(0.0, nivel, muestra_limpia.shape)
+    return muestra_limpia + ruido
+
+def generar_gausianas(n_muestras, media=(-1, 1), desviacion=(1.0, 2.5)):
+    gausianas = np.zeros((n_muestras, 200))
+    t = np.linspace(-10, 10, 200)
+
+    for i in range(n_muestras):
+        mean = np.random.uniform(*media)
+        std = np.random.uniform(*desviacion)
+
+        onda = np.exp(-0.5 * ((t - mean) / std) ** 2) / (std * np.sqrt(2 * np.pi))
+        gausianas[i] = onda
+
+    return gausianas

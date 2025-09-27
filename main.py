@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def f(x):
-    return x**2*0.1 #8*np.sin(x) + x**2
+    return 8*np.sin(x) + x**2 #x**2*0.1 #8*np.sin(x) + x**2
 
 def df(x):
-    return 0.2*x**2 #8*np.cos(x) + 2*x
+    return 8*np.cos(x) + 2*x #0.2*x**2 #8*np.cos(x) + 2*x
 
 x = np.linspace(-10, 10, 200)
 

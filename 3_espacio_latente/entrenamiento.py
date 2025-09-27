@@ -6,13 +6,14 @@ from src.utils import generar_gausianas
 gausianas = generar_gausianas(10000)
 t = np.linspace(-1,1,200)
 
+
 configuracion_red = {
     'input': 200,
     'capas_ocultas': [100, 25, 2, 25, 100, 200],
     'activaciones': ['relu', 'relu', 'sigmoide', 'relu', 'relu', 'lineal'],
     'costo': 'mse',
-    'optimizador': 'gd',
-    'epocas': 1000,
+    'optimizador': 'gdm',
+    'epocas': 200,
     'tamano_lote': 32,
     'lr': 0.3
 }
